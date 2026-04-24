@@ -96,9 +96,9 @@ client's audience mapper, so the server can validate the `aud` claim.
 
 1. In the `mcp-demo` realm go to **Clients → Create client**.
 2. Set **Client ID** to `mcp-server`.
-3. **Client authentication**: ON (confidential).
-4. **Standard flow** / **Direct access grants**: you can leave these off — this
-   client is never used to log in, only as an audience reference.
+3. **Client authentication**: OFF — this client is never used to authenticate or
+   request tokens, it only serves as an audience reference for the mapper in step 3.
+4. Disable all flows (Standard flow, Direct access grants, etc.).
 5. Save.
 
 ### 3 — Create client scopes

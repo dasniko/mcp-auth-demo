@@ -54,7 +54,7 @@ Do not upgrade these without being asked. The Quarkus BOM is
 ## Package layout
 
 ```
-dev.niko.mcp
+dasniko.mcp
   bookmark/
     Bookmark.java          record — id (UUID), url, title, tags (List<String>)
     BookmarkStore.java     @ApplicationScoped — ConcurrentHashMap<sub, CopyOnWriteArrayList<Bookmark>>

@@ -1,4 +1,4 @@
-package dev.niko.mcp.security;
+package dasniko.mcp.security;
 
 import java.util.Set;
 

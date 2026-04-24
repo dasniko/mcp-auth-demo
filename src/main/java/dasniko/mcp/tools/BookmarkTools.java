@@ -1,4 +1,4 @@
-package dev.niko.mcp.tools;
+package dasniko.mcp.tools;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import org.jboss.logging.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dev.niko.mcp.bookmark.Bookmark;
-import dev.niko.mcp.bookmark.BookmarkStore;
-import dev.niko.mcp.security.ScopeEnforcer;
+import dasniko.mcp.bookmark.Bookmark;
+import dasniko.mcp.bookmark.BookmarkStore;
+import dasniko.mcp.security.ScopeEnforcer;
 import io.quarkiverse.mcp.server.Tool;
 import io.quarkiverse.mcp.server.ToolArg;
 import io.quarkiverse.mcp.server.ToolCallException;

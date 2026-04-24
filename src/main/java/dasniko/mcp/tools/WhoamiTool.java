@@ -1,4 +1,4 @@
-package dev.niko.mcp.tools;
+package dasniko.mcp.tools;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

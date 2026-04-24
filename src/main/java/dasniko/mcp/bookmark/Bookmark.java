@@ -1,4 +1,4 @@
-package dev.niko.mcp.bookmark;
+package dasniko.mcp.bookmark;
 
 import java.util.List;
 

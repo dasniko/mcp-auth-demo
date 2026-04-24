@@ -114,14 +114,13 @@ For **each** scope, add an **Audience mapper**:
 
 1. Open the scope → **Mappers** tab → **Add mapper → By configuration → Audience**.
 2. Set **Name**: `mcp-server-audience`.
-3. **Included Client Audience**: `mcp-server` (the client created in step 2).
-   This adds the client's root URL (`http://localhost:8180/mcp` — see step 5) to the `aud` claim.
+3. **Included Custom Audience**: type your `EXPECTED_AUDIENCE` value directly, e.g. `http://localhost:8180/mcp`.
 4. **Add to access token**: ON.
 
-> The audience must match `EXPECTED_AUDIENCE`. The simplest approach is to set
-> the **Root URL** of the `mcp-server` client to your `EXPECTED_AUDIENCE` value
-> and then use **Included Client Audience** in the mapper. Alternatively, use
-> **Included Custom Audience** and type the URL directly.
+> **Why Custom Audience and not Included Client Audience?**
+> *Included Client Audience* adds the **client ID string** (e.g. `mcp-server`) to the `aud` claim —
+> not the client's Root URL. To get a URL into `aud` you must use *Included Custom Audience*.
+> The server's `EXPECTED_AUDIENCE` must match this value exactly.
 
 ### 4 — Create the end-user client (used by the MCP client / Claude Code)
 
@@ -140,11 +139,6 @@ This is the client that your MCP client uses to obtain tokens.
 
 Now a token requested for `mcp-client` will include the bookmarks scopes only when
 explicitly requested (e.g. `scope=bookmarks:read bookmarks:write`).
-
-### 6 — Set the audience in the MCP server client
-
-1. Open the `mcp-server` client → **Settings**.
-2. Set **Root URL** to `http://localhost:8180/mcp` (or your `EXPECTED_AUDIENCE`).
 
 Quarkus OIDC validates that the `aud` claim contains the value of `EXPECTED_AUDIENCE`.
 The mapper added in step 3 ensures Keycloak injects this value into the token whenever

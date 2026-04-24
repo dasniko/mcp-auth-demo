@@ -24,36 +24,36 @@ import io.quarkiverse.mcp.server.ToolCallException;
 @ApplicationScoped
 public class WhoamiTool {
 
-    private static final Logger LOG = Logger.getLogger(WhoamiTool.class);
+	private static final Logger LOG = Logger.getLogger(WhoamiTool.class);
 
-    @Inject
-    JsonWebToken jwt;
+	@Inject
+	JsonWebToken jwt;
 
-    @Inject
-    ObjectMapper mapper;
+	@Inject
+	ObjectMapper mapper;
 
-    @Tool(name = "whoami", description = "Returns the validated JWT claims visible to this server: sub, preferred_username, scope, aud, iss, exp. No specific scope required beyond a valid token.")
-    String whoami() {
-        String sub = jwt.getSubject();
-        String username = jwt.getClaim("preferred_username");
-        String scope = jwt.getClaim("scope");
-        Set<String> aud = jwt.getAudience();
+	@Tool(name = "whoami", description = "Returns the validated JWT claims visible to this server: sub, preferred_username, scope, aud, iss, exp. No specific scope required beyond a valid token.")
+	String whoami() {
+		String sub = jwt.getSubject();
+		String username = jwt.getClaim("preferred_username");
+		String scope = jwt.getClaim("scope");
+		Set<String> aud = jwt.getAudience();
 
-        LOG.infof("tool=whoami sub=%s user=%s scope=[%s] aud=%s", sub, username, scope, aud);
+		LOG.infof("tool=whoami sub=%s user=%s scope=[%s] aud=%s", sub, username, scope, aud);
 
-        // LinkedHashMap preserves insertion order for a consistent demo output
-        Map<String, Object> claims = new LinkedHashMap<>();
-        claims.put("sub", sub);
-        claims.put("preferred_username", username);
-        claims.put("scope", scope);
-        claims.put("aud", aud);
-        claims.put("iss", jwt.getIssuer());
-        claims.put("exp", jwt.getExpirationTime());
+		// LinkedHashMap preserves insertion order for a consistent demo output
+		Map<String, Object> claims = new LinkedHashMap<>();
+		claims.put("sub", sub);
+		claims.put("preferred_username", username);
+		claims.put("scope", scope);
+		claims.put("aud", aud);
+		claims.put("iss", jwt.getIssuer());
+		claims.put("exp", jwt.getExpirationTime());
 
-        try {
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(claims);
-        } catch (JsonProcessingException e) {
-            throw new ToolCallException("Serialisation error: " + e.getMessage(), e);
-        }
-    }
+		try {
+			return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(claims);
+		} catch (JsonProcessingException e) {
+			throw new ToolCallException("Serialisation error: " + e.getMessage(), e);
+		}
+	}
 }

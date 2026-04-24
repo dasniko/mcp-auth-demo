@@ -20,18 +20,18 @@ import io.quarkiverse.mcp.server.ToolCallException;
 @ApplicationScoped
 public class ScopeEnforcer {
 
-    @Inject
-    JsonWebToken jwt;
+	@Inject
+	JsonWebToken jwt;
 
-    public void require(String requiredScope) {
-        String scopeClaim = jwt.getClaim("scope");
-        Set<String> scopes = scopeClaim != null
-                ? Set.of(scopeClaim.split("\\s+"))
-                : Set.of();
+	public void require(String requiredScope) {
+		String scopeClaim = jwt.getClaim("scope");
+		Set<String> scopes = scopeClaim != null
+				? Set.of(scopeClaim.split("\\s+"))
+				: Set.of();
 
-        if (!scopes.contains(requiredScope)) {
-            throw new ToolCallException(
-                    "Insufficient scope: '" + requiredScope + "' required, token has [" + scopeClaim + "]");
-        }
-    }
+		if (!scopes.contains(requiredScope)) {
+			throw new ToolCallException(
+					"Insufficient scope: '" + requiredScope + "' required, token has [" + scopeClaim + "]");
+		}
+	}
 }

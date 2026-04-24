@@ -1,0 +1,20 @@
+services:
+  mcp-server:
+    image: mcp-auth-demo:1.0.0-SNAPSHOT
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      # Keycloak realm issuer URL — adjust if Keycloak runs elsewhere
+      ISSUER_URL: "${ISSUER_URL:-http://host.docker.internal:8180/realms/mcp-demo}"
+      # Must match the "aud" claim configured in Keycloak audience mappers
+      EXPECTED_AUDIENCE: "${EXPECTED_AUDIENCE:-http://localhost:8080/mcp}"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/q/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s

@@ -1,0 +1,21 @@
+####
+# JVM-mode Dockerfile for mcp-auth-demo.
+# Build the application first:  mvn package -DskipTests
+# Then build the image:         docker build -f src/main/docker/Dockerfile.jvm -t mcp-auth-demo:1.0.0-SNAPSHOT .
+####
+FROM eclipse-temurin:25-jre
+
+WORKDIR /deployments
+
+# Four-layer layout: changing application code only invalidates the last two layers
+COPY --chown=1000:root target/quarkus-app/lib/       /deployments/lib/
+COPY --chown=1000:root target/quarkus-app/*.jar      /deployments/
+COPY --chown=1000:root target/quarkus-app/app/       /deployments/app/
+COPY --chown=1000:root target/quarkus-app/quarkus/   /deployments/quarkus/
+
+EXPOSE 8080
+USER 1000
+
+ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar /deployments/quarkus-run.jar"]

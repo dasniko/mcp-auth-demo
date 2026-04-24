@@ -89,19 +89,7 @@ Tested with Keycloak **26.6.1**.
 1. Open the Keycloak admin console.
 2. Create a new realm named **`mcp-demo`**.
 
-### 2 — Create the MCP server client (resource server)
-
-This client represents the MCP server itself. Keycloak issues tokens with this
-client's audience mapper, so the server can validate the `aud` claim.
-
-1. In the `mcp-demo` realm go to **Clients → Create client**.
-2. Set **Client ID** to `mcp-server`.
-3. **Client authentication**: OFF — this client is never used to authenticate or
-   request tokens, it only serves as an audience reference for the mapper in step 3.
-4. Disable all flows (Standard flow, Direct access grants, etc.).
-5. Save.
-
-### 3 — Create client scopes
+### 2 — Create client scopes
 
 Go to **Client scopes → Create client scope** twice:
 
@@ -117,12 +105,11 @@ For **each** scope, add an **Audience mapper**:
 3. **Included Custom Audience**: type your `EXPECTED_AUDIENCE` value directly, e.g. `http://localhost:8180/mcp`.
 4. **Add to access token**: ON.
 
-> **Why Custom Audience and not Included Client Audience?**
-> *Included Client Audience* adds the **client ID string** (e.g. `mcp-server`) to the `aud` claim —
-> not the client's Root URL. To get a URL into `aud` you must use *Included Custom Audience*.
-> The server's `EXPECTED_AUDIENCE` must match this value exactly.
+> Use **Included Custom Audience** (not *Included Client Audience*). The latter adds a
+> client ID string to `aud`, not a URL. With a custom audience you don't need a dedicated
+> `mcp-server` client at all — the URL is injected directly.
 
-### 4 — Create the end-user client (used by the MCP client / Claude Code)
+### 3 — Create the end-user client (used by the MCP client / Claude Code)
 
 This is the client that your MCP client uses to obtain tokens.
 
@@ -132,7 +119,7 @@ This is the client that your MCP client uses to obtain tokens.
 4. Set **Valid redirect URIs** to `http://localhost/*` (adjust as needed).
 5. Save.
 
-### 5 — Assign scopes to the end-user client
+### 4 — Assign scopes to the end-user client
 
 1. Open `mcp-client` → **Client scopes** tab.
 2. **Add client scope**: add `bookmarks:read` and `bookmarks:write` as **Optional** scopes.
@@ -141,7 +128,7 @@ Now a token requested for `mcp-client` will include the bookmarks scopes only wh
 explicitly requested (e.g. `scope=bookmarks:read bookmarks:write`).
 
 Quarkus OIDC validates that the `aud` claim contains the value of `EXPECTED_AUDIENCE`.
-The mapper added in step 3 ensures Keycloak injects this value into the token whenever
+The mapper added in step 2 ensures Keycloak injects this value into the token whenever
 `bookmarks:read` or `bookmarks:write` is included.
 
 ### Quick token acquisition (curl)

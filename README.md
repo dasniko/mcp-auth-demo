@@ -24,7 +24,7 @@ On every unauthenticated request to `/mcp/*` the server returns:
 
 ```
 HTTP 401 Unauthorized
-WWW-Authenticate: Bearer resource_metadata="http://localhost:8080/.well-known/oauth-protected-resource"
+WWW-Authenticate: Bearer resource_metadata="http://localhost:8180/.well-known/oauth-protected-resource"
 ```
 
 The `/.well-known/oauth-protected-resource` endpoint (RFC 9728) is served
@@ -50,8 +50,8 @@ audience, arguments) so a live-demo audience can follow along on screen.
 ### Run locally with Maven (dev mode)
 
 ```bash
-export ISSUER_URL=http://localhost:8180/realms/mcp-demo
-export EXPECTED_AUDIENCE=http://localhost:8080/mcp
+export ISSUER_URL=http://localhost:8080/realms/mcp-demo
+export EXPECTED_AUDIENCE=http://localhost:8180/mcp
 mvn quarkus:dev
 ```
 
@@ -65,18 +65,18 @@ mvn package -DskipTests
 docker build -f src/main/docker/Dockerfile.jvm -t mcp-auth-demo:1.0.0-SNAPSHOT .
 
 # 3. Run with docker compose
-ISSUER_URL=http://host.docker.internal:8180/realms/mcp-demo \
-EXPECTED_AUDIENCE=http://localhost:8080/mcp \
+ISSUER_URL=http://host.docker.internal:8080/realms/mcp-demo \
+EXPECTED_AUDIENCE=http://localhost:8180/mcp \
 docker compose up
 ```
 
 ### Environment variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `ISSUER_URL` | `http://localhost:8180/realms/mcp-demo` | Keycloak realm URL (used as OIDC issuer) |
-| `EXPECTED_AUDIENCE` | `http://localhost:8080/mcp` | Expected `aud` claim — must match the audience mapper value in Keycloak |
-| `QUARKUS_HTTP_PORT` | `8080` | HTTP port |
+| Variable | Default                                 | Description |
+|----------|-----------------------------------------|-------------|
+| `ISSUER_URL` | `http://localhost:8080/realms/mcp-demo` | Keycloak realm URL (used as OIDC issuer) |
+| `EXPECTED_AUDIENCE` | `http://localhost:8180/mcp`             | Expected `aud` claim — must match the audience mapper value in Keycloak |
+| `QUARKUS_HTTP_PORT` | `8180`                                  | HTTP port |
 
 ---
 
@@ -115,7 +115,7 @@ For **each** scope, add an **Audience mapper**:
 1. Open the scope → **Mappers** tab → **Add mapper → By configuration → Audience**.
 2. Set **Name**: `mcp-server-audience`.
 3. **Included Client Audience**: `mcp-server` (the client created in step 2).
-   This adds the client's root URL (`http://localhost:8080/mcp` — see step 5) to the `aud` claim.
+   This adds the client's root URL (`http://localhost:8180/mcp` — see step 5) to the `aud` claim.
 4. **Add to access token**: ON.
 
 > The audience must match `EXPECTED_AUDIENCE`. The simplest approach is to set
@@ -144,7 +144,7 @@ explicitly requested (e.g. `scope=bookmarks:read bookmarks:write`).
 ### 6 — Set the audience in the MCP server client
 
 1. Open the `mcp-server` client → **Settings**.
-2. Set **Root URL** to `http://localhost:8080/mcp` (or your `EXPECTED_AUDIENCE`).
+2. Set **Root URL** to `http://localhost:8180/mcp` (or your `EXPECTED_AUDIENCE`).
 
 Quarkus OIDC validates that the `aud` claim contains the value of `EXPECTED_AUDIENCE`.
 The mapper added in step 3 ensures Keycloak injects this value into the token whenever
@@ -155,7 +155,7 @@ The mapper added in step 3 ensures Keycloak injects this value into the token wh
 ```bash
 # Token with both scopes
 TOKEN=$(curl -s -X POST \
-  http://localhost:8180/realms/mcp-demo/protocol/openid-connect/token \
+  http://localhost:8080/realms/mcp-demo/protocol/openid-connect/token \
   -d "client_id=mcp-client" \
   -d "grant_type=password" \
   -d "username=<your-test-user>" \
@@ -166,7 +166,7 @@ TOKEN=$(curl -s -X POST \
 # Call whoami
 curl -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -X POST http://localhost:8080/mcp \
+  -X POST http://localhost:8180/mcp \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"whoami","arguments":{}}}'
 ```
 
@@ -181,7 +181,7 @@ Add to your project's `.mcp.json`:
   "mcpServers": {
     "bookmarks": {
       "type": "http",
-      "url": "http://localhost:8080/mcp"
+      "url": "http://localhost:8180/mcp"
     }
   }
 }
@@ -197,7 +197,7 @@ For manual testing with a pre-obtained token you can pass it as a header:
   "mcpServers": {
     "bookmarks": {
       "type": "http",
-      "url": "http://localhost:8080/mcp",
+      "url": "http://localhost:8180/mcp",
       "headers": {
         "Authorization": "Bearer <your-token>"
       }

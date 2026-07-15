@@ -1,7 +1,7 @@
 # mcp-auth-demo
 
 A teaching/demo project that shows how to protect an MCP server with Keycloak.
-Built with Quarkus 3.34.6, the `quarkus-mcp-server-http` Quarkiverse extension, and
+Built with Quarkus 3.37.2, the `quarkus-mcp-server-http` Quarkiverse extension, and
 `quarkus-oidc`.
 
 **This is a demo — all bookmark data is stored in memory and lost on restart.**
@@ -31,7 +31,7 @@ The `/.well-known/oauth-protected-resource` endpoint (RFC 9728) is served
 automatically by `quarkus-oidc` and advertises the Keycloak issuer URL and the
 two supported scopes. A scope-check failure returns a failed MCP `ToolResponse`
 (not an HTTP 401), so the demo can show the difference between "not authenticated"
-and "authenticated but not authorised".
+and "authenticated but not authorized".
 
 Every tool invocation is logged at INFO level (tool name, sub, username, scopes,
 audience, arguments) so a live-demo audience can follow along on screen.
@@ -82,7 +82,7 @@ docker compose up
 
 ## Keycloak setup
 
-Tested with Keycloak **26.6.1**.
+Tested with Keycloak **26.7**.
 
 ### 1 — Create the realm
 
@@ -171,7 +171,7 @@ Add to your project's `.mcp.json`:
 Claude Code will discover the authorization server via the RFC 9728 metadata endpoint,
 perform the OAuth flow against Keycloak, and attach the bearer token automatically.
 
-For manual testing with a pre-obtained token you can pass it as a header:
+For manual testing with a pre-obtained token, you can pass it as a header:
 
 ```json
 {

@@ -41,9 +41,9 @@ sdk default java 25.0.2-tem
 | Component | Version |
 |-----------|---------|
 | Java | 25 |
-| Quarkus | 3.34.6 |
-| quarkus-mcp-server (Quarkiverse) | 1.12.0 |
-| Keycloak (in README only) | 26.6.1 |
+| Quarkus | 3.37.2 |
+| quarkus-mcp-server (Quarkiverse) | 1.13.1 |
+| Keycloak (in README only) | 26.7 |
 
 Do not upgrade these without being asked. The Quarkus BOM is
 `io.quarkus.platform:quarkus-bom`; the MCP BOM is
@@ -121,7 +121,7 @@ automatically when `quarkus.oidc.resource-metadata.enabled=true`.
 Relevant properties:
 ```properties
 quarkus.oidc.resource-metadata.enabled=true
-quarkus.oidc.resource-metadata.resource=${EXPECTED_AUDIENCE:http://localhost:8080/mcp}
+quarkus.oidc.resource-metadata.resource=${EXPECTED_AUDIENCE:http://localhost:8180/mcp}
 quarkus.oidc.resource-metadata.scopes=bookmarks:read,bookmarks:write
 quarkus.oidc.resource-metadata.force-https-scheme=false   # needed for localhost
 ```
@@ -198,8 +198,8 @@ mvn package -DskipTests
 docker build -f src/main/docker/Dockerfile.jvm -t mcp-auth-demo:1.0.0-SNAPSHOT .
 
 # Docker Compose (MCP server only — Keycloak is started separately)
-ISSUER_URL=http://host.docker.internal:8180/realms/mcp-demo \
-EXPECTED_AUDIENCE=http://localhost:8080/mcp \
+ISSUER_URL=http://host.docker.internal:8080/realms/mcp-demo \
+EXPECTED_AUDIENCE=http://localhost:8180/mcp \
 docker compose up
 ```
 
@@ -211,11 +211,11 @@ MCP endpoint: `POST /mcp`
 
 ## Environment variables
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `ISSUER_URL` | `http://localhost:8180/realms/mcp-demo` | Keycloak realm URL / OIDC issuer |
-| `EXPECTED_AUDIENCE` | `http://localhost:8080/mcp` | Expected `aud` claim |
-| `QUARKUS_HTTP_PORT` | `8080` | HTTP listen port |
+| Variable | Default                                 | Purpose |
+|----------|-----------------------------------------|---------|
+| `ISSUER_URL` | `http://localhost:8080/realms/mcp-demo` | Keycloak realm URL / OIDC issuer |
+| `EXPECTED_AUDIENCE` | `http://localhost:8180/mcp`             | Expected `aud` claim |
+| `QUARKUS_HTTP_PORT` | `8180`                                  | HTTP listen port |
 
 ---
 

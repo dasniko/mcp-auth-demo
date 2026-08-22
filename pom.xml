@@ -15,7 +15,7 @@
 	<properties>
 		<maven.compiler.release>25</maven.compiler.release>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<quarkus.platform.version>3.37.2</quarkus.platform.version>
+		<quarkus.platform.version>3.38.2</quarkus.platform.version>
 		<quarkus.mcp.server.version>1.13.1</quarkus.mcp.server.version>
 	</properties>
 
